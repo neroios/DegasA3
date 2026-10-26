@@ -190,7 +190,8 @@ public class Architecture {
 		commandsList.add("moveRegMem"); //17
 		commandsList.add("moveImmReg"); //18
 		commandsList.add("incReg"); //18
-
+		commandsList.add("jeq"); //19
+		commandsList.add("jlw"); //20
 	}
 
 	
@@ -1171,7 +1172,135 @@ public class Architecture {
 		PC.internalStore(); //now PC points to the next instruction. We go back to the FETCH status.
 	}
 	
+	public void jeq(){
+	// PC inc
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+		PC.read();  
+
+		memory.read();//Le memoria pra pegar o reg
+   		demux.setValue(extbus1.get());
+   		registersInternalRead(); // coloca no interno o que ta no rpg
+		ula.store(0); // joga na ula 0 pra guardar o que ta no interno
+   
+
+		// joga pc no proximo argumento
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+		PC.read(); // aqui joga no ext, destruindo o valor que tinha la (antes era o nome do rpg)
+		
+		// atualmente tem o endereco do reg no extbus1
+
+
+		memory.read(); // cospe o nome do reg
+		demux.setValue(extbus1.get());  // coloca o nome do reg no demux e FICA
+		registersInternalRead(); // Aqui ele cospe no barramento da ULA (int1) acessado por store
+
+		ula.store(1);
+		ula.sub();
+		ula.read(1); // Agora a ula cuspiu no intbus1 o resultado
+		setStatusFlags(intbus1.get()); // atualiza a flag
+
+		// PC inc
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+		PC.read();
+
+		//le o endereco do desvio na memoria e armazena na memoria de status
+		memory.read();
+		statusMemory.storeIn1();
+
+		//inc na ula para guardar o endereco caso o desvio nao aconteca
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+		PC.read();
+
+		// armazena o endereco da prox instrucao na pos 0 do status
+		statusMemory.storeIn0();
+
+		//passa o valor no flag Z para o barramento externo
+		extbus1.put(Flags.getBit(0));
+
+		//le o status com o valor de Z
+		statusMemory.read();
+
+		//armazena o valor que o status soltou no pc para fazer o desvio ou nao
+		PC.store();
+	}
+
 	
+	
+	public void jlw(){
+		// PC inc
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+		PC.read();  
+
+		memory.read();//Le memoria pra pegar o reg
+   		demux.setValue(extbus1.get());
+   		registersInternalRead(); // coloca no interno o que ta no rpg
+		ula.store(0); // joga na ula 0 pra guardar o que ta no interno
+   
+
+		// joga pc no proximo argumento
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+		PC.read(); // aqui joga no ext, destruindo o valor que tinha la (antes era o nome do rpg)
+		
+		// atualmente tem o endereco do reg no extbus1
+
+
+		memory.read(); // cospe o nome do reg
+		demux.setValue(extbus1.get());  // coloca o nome do reg no demux e FICA
+		registersInternalRead(); // Aqui ele cospe no barramento da ULA (int1) acessado por store
+
+		ula.store(1);
+		ula.sub();
+		ula.read(1); // Agora a ula cuspiu no intbus1 o resultado
+		setStatusFlags(intbus1.get()); // atualiza a flag
+
+		// PC inc
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+		PC.read();
+
+		//le o endereco do desvio na memoria e armazena na memoria de status
+		memory.read();
+		statusMemory.storeIn1();
+
+		//inc na ula para guardar o endereco caso o desvio nao aconteca
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+		PC.read();
+
+		// armazena o endereco da prox instrucao na pos 0 do status
+		statusMemory.storeIn0();
+
+		//passa o valor no flag N para o barramento externo
+		extbus1.put(Flags.getBit(1));
+
+		//le o status com o valor de N
+		statusMemory.read();
+
+		//armazena o valor que o status soltou no pc para fazer o desvio ou nao
+		PC.store();
+	}
 	
 	
 	
