@@ -1707,35 +1707,32 @@ arch.getPC().read();assertEquals(13, arch.getExtbus1().get());
 	public void testJeq() {
 		
 		Architecture arch = new Architecture();
+		// 10  11   12   13
+		// jeq reg2 reg1 2
+		// Se os regs conterem o mesmo conteudo,desvia pra posicao de memoria 2. Se nao, passa reto pra 14
+		
+		
 		
 		//storing the number 10 in PC
 		arch.getIntbus2().put(10);
 		arch.getPC().internalStore();
-
-		// guardou no reg2
-		arch.getExtbus1().put(5);
-    	arch.getRegistersList().get(2).store();
-
-    	// guardou no reg1
-		arch.getExtbus1().put(5);
-    	arch.getRegistersList().get(1).store();
 		
-		//storing the number 2 in the into the memory, in position 11, the position just after PC
-		arch.getExtbus1().put(11);
-		arch.getMemory().store();
-		arch.getExtbus1().put(2);
-		arch.getMemory().store();
 		
-		//storing the number 1 in the into the memory, in position 12, the position just after PC
-		arch.getExtbus1().put(12);
-		arch.getMemory().store();
-		arch.getExtbus1().put(1);
-		arch.getMemory().store();
+		arch.getMemory().getDataList()[11]=2;
+		
+		arch.getExtbus1().put(20);
+		arch.getRegistersList().get(2).store(); //RPG2 has 20
+		
 
-		//storing the number 25 in the into the memory, in position 13, the position just after PC
+		arch.getMemory().getDataList()[12]=1;
+		
+		arch.getExtbus1().put(20);
+		arch.getRegistersList().get(1).store(); //RPG1 has 20
+		
+    	
 		arch.getExtbus1().put(13);
 		arch.getMemory().store();
-		arch.getExtbus1().put(25);
+		arch.getExtbus1().put(2);
 		arch.getMemory().store();
 
 		//now we can perform the jeq method. 
@@ -1743,41 +1740,40 @@ arch.getPC().read();assertEquals(13, arch.getExtbus1().get());
 
 
 		//Test 1.
-		// $reg2 is equal to $reg1. So, PC must be storing the number 25 (the parameter in the memory)
+		// $reg2 is equal to $reg1. So, PC must be storing the number 2 (the parameter in the memory)
 		
 		arch.jeq();
 		arch.getPC().read();
-		assertEquals(25, arch.getExtbus1().get());
+		assertEquals(2, arch.getExtbus1().get());
 
+		
+		
+		
+		
+		
+		
+		
 
 		//storing the number 10 in PC
 		arch.getIntbus2().put(10);
 		arch.getPC().internalStore();
-
-		// guardou no reg2
+		
+		
+		arch.getMemory().getDataList()[11]=2;
+		
 		arch.getExtbus1().put(5);
-    	arch.getRegistersList().get(2).store();
+		arch.getRegistersList().get(2).store(); //RPG2 has 20
+		
 
-    	// guardou no reg1
+		arch.getMemory().getDataList()[12]=1;
+		
 		arch.getExtbus1().put(4);
-    	arch.getRegistersList().get(1).store();
+		arch.getRegistersList().get(1).store(); //RPG1 has 20
 		
-		//storing the number 2 in the into the memory, in position 11, the position just after PC
-		arch.getExtbus1().put(11);
-		arch.getMemory().store();
-		arch.getExtbus1().put(2);
-		arch.getMemory().store();
-		
-		//storing the number 1 in the into the memory, in position 12, the position just after PC
-		arch.getExtbus1().put(12);
-		arch.getMemory().store();
-		arch.getExtbus1().put(1);
-		arch.getMemory().store();
-
-		//storing the number 25 in the into the memory, in position 13, the position just after PC
+    	
 		arch.getExtbus1().put(13);
 		arch.getMemory().store();
-		arch.getExtbus1().put(25);
+		arch.getExtbus1().put(2);
 		arch.getMemory().store();
 
 		//now we can perform the jeq method. 
@@ -1804,31 +1800,25 @@ arch.getPC().read();assertEquals(13, arch.getExtbus1().get());
 		arch.getIntbus2().put(10);
 		arch.getPC().internalStore();
 
-		// guardou no reg2
-		arch.getExtbus1().put(4);
-    	arch.getRegistersList().get(2).store();
-
-    	// guardou no reg1
-		arch.getExtbus1().put(5);
-    	arch.getRegistersList().get(1).store();
+	
 		
-		//storing the number 2 in the into the memory, in position 11, the position just after PC
-		arch.getExtbus1().put(11);
+		arch.getMemory().getDataList()[11]=2;
+		
+		arch.getExtbus1().put(4);
+		arch.getRegistersList().get(2).store(); //RPG2 has 20
+		
+
+		arch.getMemory().getDataList()[12]=1;
+		
+		arch.getExtbus1().put(5);
+		arch.getRegistersList().get(1).store(); //RPG1 has 20
+		
+    	
+		arch.getExtbus1().put(13);
 		arch.getMemory().store();
 		arch.getExtbus1().put(2);
 		arch.getMemory().store();
-		
-		//storing the number 1 in the into the memory, in position 12, the position just after PC
-		arch.getExtbus1().put(12);
-		arch.getMemory().store();
-		arch.getExtbus1().put(1);
-		arch.getMemory().store();
 
-		//storing the number 25 in the into the memory, in position 13, the position just after PC
-		arch.getExtbus1().put(13);
-		arch.getMemory().store();
-		arch.getExtbus1().put(25);
-		arch.getMemory().store();
 
 		//now we can perform the jeq method. 
 
@@ -1839,45 +1829,48 @@ arch.getPC().read();assertEquals(13, arch.getExtbus1().get());
 		
 		arch.jlw();
 		arch.getPC().read();
-		assertEquals(25, arch.getExtbus1().get());
+		assertEquals(2, arch.getExtbus1().get());
 
-
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		//storing the number 10 in PC
 		arch.getIntbus2().put(10);
 		arch.getPC().internalStore();
 
-		// guardou no reg2
-		arch.getExtbus1().put(5);
-    	arch.getRegistersList().get(2).store();
-
-    	// guardou no reg1
-		arch.getExtbus1().put(4);
-    	arch.getRegistersList().get(1).store();
+	
 		
-		//storing the number 2 in the into the memory, in position 11, the position just after PC
-		arch.getExtbus1().put(11);
+		arch.getMemory().getDataList()[11]=2;
+		
+		arch.getExtbus1().put(5);
+		arch.getRegistersList().get(2).store(); //RPG2 has 20
+		
+
+		arch.getMemory().getDataList()[12]=1;
+		
+		arch.getExtbus1().put(4);
+		arch.getRegistersList().get(1).store(); //RPG1 has 20
+		
+    	
+		arch.getExtbus1().put(13);
 		arch.getMemory().store();
 		arch.getExtbus1().put(2);
 		arch.getMemory().store();
-		
-		//storing the number 1 in the into the memory, in position 12, the position just after PC
-		arch.getExtbus1().put(12);
-		arch.getMemory().store();
-		arch.getExtbus1().put(1);
-		arch.getMemory().store();
 
-		//storing the number 25 in the into the memory, in position 13, the position just after PC
-		arch.getExtbus1().put(13);
-		arch.getMemory().store();
-		arch.getExtbus1().put(25);
-		arch.getMemory().store();
 
 		//now we can perform the jeq method. 
 
 
 
 		//Test 1.
-		// $reg2 is not less than $reg1. So, PC must be storing the number 14 (the next position in the memory)
+		// $reg2 is less than $reg1. So, PC must be storing the number 25 (the parameter in the memory)
 		
 		arch.jlw();
 		arch.getPC().read();
@@ -1885,6 +1878,8 @@ arch.getPC().read();assertEquals(13, arch.getExtbus1().get());
 			
 
 	}
+	
+
 	
 	
 	
