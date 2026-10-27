@@ -189,9 +189,9 @@ public class Architecture {
 		commandsList.add("moveMemReg"); //16
 		commandsList.add("moveRegMem"); //17
 		commandsList.add("moveImmReg"); //18
-		commandsList.add("incReg"); //18
-		commandsList.add("jeq"); //19
-		commandsList.add("jlw"); //20
+		commandsList.add("incReg"); //19
+		commandsList.add("jeq"); //20
+		commandsList.add("jlw"); //21
 	}
 
 	
@@ -1433,7 +1433,44 @@ public class Architecture {
 			break;
 		case 9:
 			moveRegReg();
+		case 10:
+			addRegReg();
 			break;
+		case 11:
+			addMemReg();
+			break;
+		case 12:
+			addRegMem();
+			break;
+		case 13:
+			subRegReg();
+			break;
+		case 14:
+			subMemReg();
+			break;
+		case 15:
+			subImmReg();
+			break;
+		case 16:
+			moveMemReg();
+			break;
+		case 17:
+			moveRegMem();
+			break;
+		case 18:
+			moveImmReg();
+			break;
+		case 19:
+			incReg();
+			break;
+		case 20:
+			jeq();
+			break;
+		case 21:
+			jlw();
+			break;
+						
+			
 		default:
 			halt = true;
 			break;
