@@ -278,7 +278,13 @@ public class Assembler {
 		if (p<0){ //the command isn't in the list. So it must have multiple formats
 			if ("move".equals(tokens[0])) //the command is a move
 				p = proccessMove(tokens);
-		}
+			
+			else if("add".equals(tokens[0]))
+				p = proccessAdd(tokens);
+			
+			else if("sub".equals(tokens[0]))
+				p = proccessSub(tokens);
+		}	
 		return p;
 	}
 
@@ -289,9 +295,6 @@ public class Assembler {
 	 * @return
 	 */
 	
-	
-	
-	
 	private int proccessMove(String[] tokens) {
 		String p1 = tokens[1];
 		String p2 = tokens[2];
@@ -299,17 +302,72 @@ public class Assembler {
 		if ((p1.startsWith("%"))&&(p2.startsWith("%"))) { //this is a moveRegReg comand
 			p = commands.indexOf("moveRegReg");
 		}
-		else if ((p1.startsWith("%"))&&(p2.startsWith("%"))) { //this is a moveRegReg comand
-			p = commands.indexOf("moveRegReg");
+		else if ((p1.startsWith("%"))&&(!isNumber(p2))) { //this is a moveRegReg comand
+			p = commands.indexOf("moveRegMem");
+		}
+		else if ((!isNumber(p1))&&(p2.startsWith("%"))){
+			p = commands.indexOf("moveMemReg");
+		}
+		else if ((isNumber(p1)) && (p2.startsWith("%"))) {
+			p = commands.indexOf("moveImmReg");
 		}
 		return p;
 	}
 
 	
+	private int proccessAdd(String[] tokens) {
+		String p1 = tokens[1];
+		String p2 = tokens[2];
+		int p=-1;
+		if ((p1.startsWith("%"))&&(p2.startsWith("%"))) { //this is a moveRegReg comand
+			p = commands.indexOf("addRegReg");
+		}
+		else if ((p1.startsWith("%"))&&(!isNumber(p2))) { //this is a moveRegReg comand
+			p = commands.indexOf("addRegMem");
+		}
+		else if ((!isNumber(p1))&&(p2.startsWith("%"))){
+			p = commands.indexOf("addMemReg");
+		}
+		return p;
+	}
+	
+	
+	private int proccessSub(String[] tokens) {
+		String p1 = tokens[1];
+		String p2 = tokens[2];
+		int p=-1;
+		if ((p1.startsWith("%"))&&(p2.startsWith("%"))) { //this is a moveRegReg comand
+			p = commands.indexOf("subRegReg");
+		}
+		else if ((p1.startsWith("%"))&&(!isNumber(p2))) { //this is a moveRegReg comand
+			p = commands.indexOf("subRegMem");
+		}
+		else if ((isNumber(p1))&&(p2.startsWith("%"))){
+			p = commands.indexOf("subImmReg");
+		}
+		return p;
+	}
 	
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	public boolean isNumber(String s){
+	 try {
+	       Integer.parseInt(s);
+	       return true;
+	    }
+	    catch(NumberFormatException e){
+	        return false;
+	    }
+	}
 	
 	
 	
@@ -481,7 +539,7 @@ public class Assembler {
 	}
 
 	public static void main(String[] args) throws IOException {
-		String filename = args[0];
+		String filename = "MeuParaTestes";//args[0];
 		Assembler assembler = new Assembler();
 		System.out.println("Reading source assembler file: "+filename+".dsf");
 		assembler.read(filename);
