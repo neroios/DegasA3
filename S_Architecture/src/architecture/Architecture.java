@@ -170,8 +170,8 @@ public class Architecture {
 	 */
 	protected void fillCommandsList() {
 		commandsList = new ArrayList<String>();
-		commandsList.add("add");   //0
-		commandsList.add("sub");   //1
+		commandsList.add("addDefault");   //0
+		commandsList.add("subDefault");   //1
 		commandsList.add("jmp");   //2
 		commandsList.add("jz");    //3
 		commandsList.add("jn");    //4
@@ -1054,11 +1054,13 @@ public class Architecture {
 		PC.read();  
 		                          
 		
+	
+
+		
+		
 		memory.read();
 		memory.read();
 		RPG0.store();
-		
-		
 		
 		ula.inc();
 		ula.internalRead(1);
@@ -1070,7 +1072,8 @@ public class Architecture {
 		memory.read();
 		demux.setValue(extbus1.get()); //points to the correct register
 		registersInternalStore(); //starts the read from the register identified into demux bus
-
+		
+		
 
 		ula.inc();
 		ula.internalRead(1);
@@ -1401,7 +1404,7 @@ public class Architecture {
 	 */
 	private void decodeExecute() {
 		IR.internalRead(); //the instruction is in the internalbus2
-		int command = intbus2.get();
+		int command = extbus1.get();
 		simulationDecodeExecuteBefore(command);
 		switch (command) {
 		case 0:
@@ -1433,6 +1436,7 @@ public class Architecture {
 			break;
 		case 9:
 			moveRegReg();
+			break;
 		case 10:
 			addRegReg();
 			break;
@@ -1475,7 +1479,7 @@ public class Architecture {
 			halt = true;
 			break;
 		}
-		if (simulation)
+		if (!simulation)
 			simulationDecodeExecuteAfter();
 	}
 

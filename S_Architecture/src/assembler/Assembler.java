@@ -207,10 +207,11 @@ public class Assembler {
 			parameter2 = tokens[2];
 			parameter2 = "&"+parameter2;
 		}
-		if (commandNumber == 15) { //must to proccess an subImmMem command
+		if (commandNumber == 15) { //must to proccess an subImmReg command
 			parameter = tokens[1];
 			parameter2 = tokens[2];
-			parameter2 = "&"+parameter2;
+			
+		}	
 		if (commandNumber == 16) { //must to proccess an moveMemReg command
 			parameter = tokens[1];
 			parameter = "&"+parameter;
@@ -221,10 +222,10 @@ public class Assembler {
 			parameter2 = tokens[2];
 			parameter2 = "&"+parameter2;
 		}
-		if (commandNumber == 18) { //must to proccess an moveImmMem command
+		if (commandNumber == 18) { //must to proccess an moveImmReg command
 			parameter = tokens[1];
 			parameter2 = tokens[2];
-			parameter2 = "&"+parameter2;
+			
 		}
 		if (commandNumber == 19) { //must to proccess an incReg command
 			parameter = tokens[1];
@@ -256,7 +257,7 @@ public class Assembler {
 			objProgram.add(parameter3);
 		}
 	}
-}
+
 
 	/**
 	 * This method uses the tokens to search a command
@@ -299,6 +300,7 @@ public class Assembler {
 		String p1 = tokens[1];
 		String p2 = tokens[2];
 		int p=-1;
+		
 		if ((p1.startsWith("%"))&&(p2.startsWith("%"))) { //this is a moveRegReg comand
 			p = commands.indexOf("moveRegReg");
 		}
@@ -317,9 +319,20 @@ public class Assembler {
 	
 	private int proccessAdd(String[] tokens) {
 		String p1 = tokens[1];
-		String p2 = tokens[2];
+		String p2 = "";
+		if(tokens.length > 2) {
+			p2 = tokens[2];
+		}
+		
+	
+		
 		int p=-1;
-		if ((p1.startsWith("%"))&&(p2.startsWith("%"))) { //this is a moveRegReg comand
+		
+		if(!isNumber(p1) && (p2.isEmpty()) &&(!p1.startsWith("%"))) {
+			p = commands.indexOf("addDefault");
+
+		}
+		else if ((p1.startsWith("%"))&&(p2.startsWith("%"))) { //this is a moveRegReg comand
 			p = commands.indexOf("addRegReg");
 		}
 		else if ((p1.startsWith("%"))&&(!isNumber(p2))) { //this is a moveRegReg comand
@@ -334,9 +347,17 @@ public class Assembler {
 	
 	private int proccessSub(String[] tokens) {
 		String p1 = tokens[1];
-		String p2 = tokens[2];
+		String p2 = "";
+		if(tokens.length > 2) {
+			p2 = tokens[2];
+		}
 		int p=-1;
-		if ((p1.startsWith("%"))&&(p2.startsWith("%"))) { //this is a moveRegReg comand
+		
+		if(!isNumber(p1) && (p2.isEmpty()) &&(!p1.startsWith("%"))) {
+			p = commands.indexOf("addDefault");
+
+		}
+		else if ((p1.startsWith("%"))&&(p2.startsWith("%"))) { //this is a moveRegReg comand
 			p = commands.indexOf("subRegReg");
 		}
 		else if ((p1.startsWith("%"))&&(!isNumber(p2))) { //this is a moveRegReg comand

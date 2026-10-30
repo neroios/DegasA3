@@ -60,6 +60,8 @@ public class TestArchitecture {
 
 	@Test
 	public void testAdd() {
+		
+		// add 40 = RPGPadrao <- RPGPadrao + mem[40]
 		Architecture arch = new Architecture();
 		//storing the number 5 in position 40
 		arch.getExtbus1().put(40);
@@ -73,6 +75,8 @@ public class TestArchitecture {
 		arch.getMemory().store();
 		arch.getExtbus1().put(40); //40 is in position 11
 		arch.getMemory().store();
+		
+		
 		arch.getExtbus1().put(10);
 		arch.getPC().store();      //PC points to position 10
 		
@@ -1511,10 +1515,158 @@ arch.getPC().read();assertEquals(13, arch.getExtbus1().get());
 	public void testMoveMemReg() {
 		Architecture arch = new Architecture();
 
+		
+		// rpg0
+		// 49 tem 100
+	  	arch.getExtbus1().put(49);
+	  	arch.getMemory().store();
+	  	arch.getExtbus1().put(44);
+	  	arch.getMemory().store();
+		
+	  	//31 tem 49
+	  	arch.getExtbus1().put(31);
+	  	arch.getMemory().store();
+	  	arch.getExtbus1().put(49);
+	  	arch.getMemory().store();
+		
+		
+		
+		arch.getMemory().getDataList()[32]=0;
+		
+		
+		//making PC points to position 30
+		arch.getExtbus1().put(30);
+		arch.getPC().store();
+		
+		
+		// 32 tem 3
+		arch.getExtbus1().put(20);
+		arch.getRegistersList().get(0).store(); //RPG3 has 20
+	
+		
+		//executing the command move REG1 REG0.
+		arch.moveMemReg();
+
+		
+		
+		// vendo se ambos tem o mesmo valor
+		arch.getExtbus1().put(31);
+		arch.getMemory().read();		
+		arch.getMemory().read();
+		assertEquals(44, arch.getExtbus1().get());
+		
+		arch.getRegistersList().get(0).read();
+		assertEquals(44, arch.getExtbus1().get());
+		
+		
+		
+		//Testing if PC points to 3 positions after the original
+		//PC was pointing to 30; now it must be pointing to 33
+		arch.getPC().read();assertEquals(33, arch.getExtbus1().get());
+		
+		
+		// rpg1
+		// 49 tem 100
+	  	arch.getExtbus1().put(49);
+	  	arch.getMemory().store();
+	  	arch.getExtbus1().put(33);
+	  	arch.getMemory().store();
+		
+	  	//31 tem 49
+	  	arch.getExtbus1().put(31);
+	  	arch.getMemory().store();
+	  	arch.getExtbus1().put(49);
+	  	arch.getMemory().store();
+		
+		
+		
+		arch.getMemory().getDataList()[32]=1;
+		
+		
+		//making PC points to position 30
+		arch.getExtbus1().put(30);
+		arch.getPC().store();
+		
+		
+		// 32 tem 3
+		arch.getExtbus1().put(20);
+		arch.getRegistersList().get(1).store(); //RPG3 has 20
+	
+		
+		//executing the command move REG1 REG0.
+		arch.moveMemReg();
+
+		
+		
+		// vendo se ambos tem o mesmo valor
+		arch.getExtbus1().put(31);
+		arch.getMemory().read();		
+		arch.getMemory().read();
+		assertEquals(33, arch.getExtbus1().get());
+		
+		arch.getRegistersList().get(1).read();
+		assertEquals(33, arch.getExtbus1().get());
+		
+		
+		
+		//Testing if PC points to 3 positions after the original
+		//PC was pointing to 30; now it must be pointing to 33
+		arch.getPC().read();assertEquals(33, arch.getExtbus1().get());
+		
+		// rpg2
 		// 49 tem 100
 	  	arch.getExtbus1().put(49);
 	  	arch.getMemory().store();
 	  	arch.getExtbus1().put(100);
+	  	arch.getMemory().store();
+		
+	  	//31 tem 49
+	  	arch.getExtbus1().put(31);
+	  	arch.getMemory().store();
+	  	arch.getExtbus1().put(49);
+	  	arch.getMemory().store();
+		
+		
+		
+		arch.getMemory().getDataList()[32]=2;
+		
+		
+		//making PC points to position 30
+		arch.getExtbus1().put(30);
+		arch.getPC().store();
+		
+		
+		// 32 tem 3
+		arch.getExtbus1().put(20);
+		arch.getRegistersList().get(2).store(); //RPG3 has 20
+	
+		
+		//executing the command move REG1 REG0.
+		arch.moveMemReg();
+
+		
+		
+		// vendo se ambos tem o mesmo valor
+		arch.getExtbus1().put(31);
+		arch.getMemory().read();		
+		arch.getMemory().read();
+		assertEquals(100, arch.getExtbus1().get());
+		
+		arch.getRegistersList().get(2).read();
+		assertEquals(100, arch.getExtbus1().get());
+		
+		
+		
+		//Testing if PC points to 3 positions after the original
+		//PC was pointing to 30; now it must be pointing to 33
+		arch.getPC().read();assertEquals(33, arch.getExtbus1().get());
+		
+		
+		// rpg3
+		// 49 tem 100
+	  	arch.getExtbus1().put(49);
+	  	arch.getMemory().store();
+	  	arch.getExtbus1().put(21);
 	  	arch.getMemory().store();
 		
 	  	//31 tem 49
@@ -1547,10 +1699,10 @@ arch.getPC().read();assertEquals(13, arch.getExtbus1().get());
 		arch.getExtbus1().put(31);
 		arch.getMemory().read();		
 		arch.getMemory().read();
-		assertEquals(100, arch.getExtbus1().get());
+		assertEquals(21, arch.getExtbus1().get());
 		
 		arch.getRegistersList().get(3).read();
-		assertEquals(100, arch.getExtbus1().get());
+		assertEquals(21, arch.getExtbus1().get());
 		
 		
 		
@@ -1949,8 +2101,8 @@ arch.getPC().read();assertEquals(13, arch.getExtbus1().get());
 		
 		Architecture arch = new Architecture();
 		ArrayList<String> commands = arch.getCommandsList();
-		assertTrue("add".equals(commands.get(0)));
-		assertTrue("sub".equals(commands.get(1)));
+		assertTrue("addDefault".equals(commands.get(0)));
+		assertTrue("subDefault".equals(commands.get(1)));
 		assertTrue("jmp".equals(commands.get(2)));
 		assertTrue("jz".equals(commands.get(3)));
 		assertTrue("jn".equals(commands.get(4)));
@@ -1968,7 +2120,9 @@ arch.getPC().read();assertEquals(13, arch.getExtbus1().get());
 		assertTrue("moveMemReg".equals(commands.get(16)));
 		assertTrue("moveRegMem".equals(commands.get(17)));
 		assertTrue("moveImmReg".equals(commands.get(18)));
-		assertTrue("incReg".equals(commands.get(18)));
+		assertTrue("incReg".equals(commands.get(19)));
+		assertTrue("jeq".equals(commands.get(20)));
+		assertTrue("jlw".equals(commands.get(21)));
 
 	}
 	
