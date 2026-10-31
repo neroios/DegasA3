@@ -170,15 +170,15 @@ public class Architecture {
 	 */
 	protected void fillCommandsList() {
 		commandsList = new ArrayList<String>();
-		commandsList.add("add");   //0
-		commandsList.add("sub");   //1
+		commandsList.add("addDefault");   //0
+		commandsList.add("subDefault");   //1
 		commandsList.add("jmp");   //2
 		commandsList.add("jz");    //3
 		commandsList.add("jn");    //4
 		commandsList.add("read");  //5
 		commandsList.add("store"); //6
 		commandsList.add("ldi");   //7
-		commandsList.add("inc");   //8		
+		commandsList.add("incDefault");   //8		
 		commandsList.add("moveRegReg"); //9
 		commandsList.add("addRegReg"); // 10
 		commandsList.add("addMemReg"); // 11
@@ -189,9 +189,9 @@ public class Architecture {
 		commandsList.add("moveMemReg"); //16
 		commandsList.add("moveRegMem"); //17
 		commandsList.add("moveImmReg"); //18
-		commandsList.add("incReg"); //18
-		commandsList.add("jeq"); //19
-		commandsList.add("jlw"); //20
+		commandsList.add("incReg"); //19
+		commandsList.add("jeq"); //20
+		commandsList.add("jlw"); //21
 	}
 
 	
@@ -1054,11 +1054,13 @@ public class Architecture {
 		PC.read();  
 		                          
 		
+	
+
+		
+		
 		memory.read();
 		memory.read();
 		RPG0.store();
-		
-		
 		
 		ula.inc();
 		ula.internalRead(1);
@@ -1070,7 +1072,8 @@ public class Architecture {
 		memory.read();
 		demux.setValue(extbus1.get()); //points to the correct register
 		registersInternalStore(); //starts the read from the register identified into demux bus
-
+		
+		
 
 		ula.inc();
 		ula.internalRead(1);
@@ -1401,7 +1404,7 @@ public class Architecture {
 	 */
 	private void decodeExecute() {
 		IR.internalRead(); //the instruction is in the internalbus2
-		int command = intbus2.get();
+		int command = extbus1.get();
 		simulationDecodeExecuteBefore(command);
 		switch (command) {
 		case 0:
@@ -1434,11 +1437,49 @@ public class Architecture {
 		case 9:
 			moveRegReg();
 			break;
+		case 10:
+			addRegReg();
+			break;
+		case 11:
+			addMemReg();
+			break;
+		case 12:
+			addRegMem();
+			break;
+		case 13:
+			subRegReg();
+			break;
+		case 14:
+			subMemReg();
+			break;
+		case 15:
+			subImmReg();
+			break;
+		case 16:
+			moveMemReg();
+			break;
+		case 17:
+			moveRegMem();
+			break;
+		case 18:
+			moveImmReg();
+			break;
+		case 19:
+			incReg();
+			break;
+		case 20:
+			jeq();
+			break;
+		case 21:
+			jlw();
+			break;
+						
+			
 		default:
 			halt = true;
 			break;
 		}
-		if (simulation)
+		if (!simulation)
 			simulationDecodeExecuteAfter();
 	}
 
@@ -1538,7 +1579,8 @@ public class Architecture {
 	
 	public static void main(String[] args) throws IOException {
 		Architecture arch = new Architecture(true);
-		arch.readExec("program");
+		//arch.readExec("MeuParaTestes");
+		arch.readExec("fibonacci");
 		arch.controlUnitEexec();
 	}
 	

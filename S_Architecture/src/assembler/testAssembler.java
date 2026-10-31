@@ -139,6 +139,20 @@ public class testAssembler {
 		assertEquals("%RPG1", ass.getObjProgram().get(2));
 		assertEquals(3, ass.getObjProgram().size()); //only two lines: the command and the address
 		
+		// Testando o add %regA %regB
+		returnedObj = new ArrayList<>();
+		ass = new Assembler();
+		commandLine[0] = "move";
+		commandLine[1] = "%RPG2";
+		commandLine[2] = "%RPG3";
+		ass.proccessCommand(commandLine);
+		returnedObj = ass.getObjProgram();
+		assertEquals("10", ass.getObjProgram().get(0)); // Opcode do addregreg e 10
+		assertEquals("%RPG0", ass.getObjProgram().get(1));
+		assertEquals("%RPG1", ass.getObjProgram().get(2));
+		assertEquals("3", ass.getObjProgram().size()); // Tres parametros
+		
+		
 		//final test: a small program
 		//testing the following lines
 		//sub adr1
@@ -150,6 +164,8 @@ public class testAssembler {
 		//move %RPG0 %RPG1
 		//read adr3
 		//let's start!!!
+		
+		
 		returnedObj = new ArrayList<>();
 		ass = new Assembler();
 		commandLine[0] = "sub";
@@ -203,6 +219,7 @@ public class testAssembler {
 		
 		assertEquals("5", returnedObj.get(14)); //the code of read is 5
 		assertEquals("&adr3", returnedObj.get(15)); //the parameter
+		
 	}
 
 	@Test

@@ -1,0 +1,12 @@
+a
+b
+c
+ldi 90
+store a
+move a %RPG1
+ldi 20
+store b
+move b %RPG0
+add %RPG1 %RPG0
+move %RPG0 c
+read c

@@ -144,6 +144,7 @@ public class Assembler {
 		String command = tokens[0];
 		String parameter ="";
 		String parameter2 = "";
+		String parameter3 = "";
 		int commandNumber = findCommandNumber(tokens);
 		if (commandNumber == 0) { //must to proccess an add command
 			parameter = tokens[1];
@@ -183,6 +184,68 @@ public class Assembler {
 			parameter = tokens[1];
 			parameter2 = tokens[2];
 		}
+		if (commandNumber == 10) { //must to proccess an addRegReg command
+			parameter = tokens[1];
+			parameter2 = tokens[2];
+		}
+		if (commandNumber == 11) { //must to proccess an addMemReg command
+			parameter = tokens[1];
+			parameter = "&"+parameter;
+			parameter2 = tokens[2];
+		}
+		if (commandNumber == 12) { //must to proccess an addRegMem command
+			parameter = tokens[1];
+			parameter2 = tokens[2];
+			parameter2 = "&"+parameter2;
+		}
+		if (commandNumber == 13) { //must to proccess an subRegReg command
+			parameter = tokens[1];
+			parameter2 = tokens[2];
+		}
+		if (commandNumber == 14) { //must to proccess an subRegMem command
+			parameter = tokens[1];
+			parameter2 = tokens[2];
+			parameter2 = "&"+parameter2;
+		}
+		if (commandNumber == 15) { //must to proccess an subImmReg command
+			parameter = tokens[1];
+			parameter2 = tokens[2];
+			
+		}	
+		if (commandNumber == 16) { //must to proccess an moveMemReg command
+			parameter = tokens[1];
+			parameter = "&"+parameter;
+			parameter2 = tokens[2];
+		}
+		if (commandNumber == 17) { //must to proccess an moveRegMem command
+			parameter = tokens[1];
+			parameter2 = tokens[2];
+			parameter2 = "&"+parameter2;
+		}
+		if (commandNumber == 18) { //must to proccess an moveImmReg command
+			parameter = tokens[1];
+			parameter2 = tokens[2];
+			
+		}
+		if (commandNumber == 19) { //must to proccess an incReg command
+			parameter = tokens[1];
+		}
+		if (commandNumber == 20) { //must to proccess an jeq command
+			parameter = tokens[1];
+			parameter2 = tokens[2];
+			parameter3 = tokens[3];
+			parameter3 = "&"+parameter3;
+		}
+		if (commandNumber == 21) { //must to proccess an jlw command
+			parameter = tokens[1];
+			parameter2 = tokens[2];
+			parameter3 = tokens[3];
+			parameter3 = "&"+parameter3;
+		}
+		
+		
+		
+		
 		objProgram.add(Integer.toString(commandNumber));
 		if (!parameter.isEmpty()) {
 			objProgram.add(parameter);
@@ -190,8 +253,11 @@ public class Assembler {
 		if (!parameter2.isEmpty()) {
 			objProgram.add(parameter2);
 		}
+		if(!parameter3.isEmpty()) {
+			objProgram.add(parameter3);
+		}
 	}
-	
+
 
 	/**
 	 * This method uses the tokens to search a command
@@ -201,12 +267,27 @@ public class Assembler {
 	 * @param tokens
 	 * @return
 	 */
+	
+	
+	
+	
+	
+	// Parei aqui, tenho que continuar fazendo mas nao sei como identificar se e string ou se e inteiro
+	
 	private int findCommandNumber(String[] tokens) {
 		int p = commands.indexOf(tokens[0]);
 		if (p<0){ //the command isn't in the list. So it must have multiple formats
 			if ("move".equals(tokens[0])) //the command is a move
 				p = proccessMove(tokens);
-		}
+			
+			else if("add".equals(tokens[0]))
+				p = proccessAdd(tokens);
+			
+			else if("sub".equals(tokens[0]))
+				p = proccessSub(tokens);
+			else if("inc".equals(tokens[0]))
+				p = proccessInc(tokens);
+		}	
 		return p;
 	}
 
@@ -216,16 +297,126 @@ public class Assembler {
 	 * @param tokens
 	 * @return
 	 */
+	
 	private int proccessMove(String[] tokens) {
 		String p1 = tokens[1];
 		String p2 = tokens[2];
 		int p=-1;
+		
 		if ((p1.startsWith("%"))&&(p2.startsWith("%"))) { //this is a moveRegReg comand
 			p = commands.indexOf("moveRegReg");
+		}
+		else if ((p1.startsWith("%"))&&(!isNumber(p2))) { //this is a moveRegReg comand
+			p = commands.indexOf("moveRegMem");
+		}
+		else if ((!isNumber(p1))&&(p2.startsWith("%"))){
+			p = commands.indexOf("moveMemReg");
+		}
+		else if ((isNumber(p1)) && (p2.startsWith("%"))) {
+			p = commands.indexOf("moveImmReg");
 		}
 		return p;
 	}
 
+	
+	private int proccessAdd(String[] tokens) {
+		String p1 = tokens[1];
+		String p2 = "";
+		if(tokens.length > 2) {
+			p2 = tokens[2];
+		}
+		
+	
+		
+		int p=-1;
+		
+		if(!isNumber(p1) && (p2.isEmpty()) &&(!p1.startsWith("%"))) {
+			p = commands.indexOf("addDefault");
+
+		}
+		else if ((p1.startsWith("%"))&&(p2.startsWith("%"))) { //this is a moveRegReg comand
+			p = commands.indexOf("addRegReg");
+		}
+		else if ((p1.startsWith("%"))&&(!isNumber(p2))) { //this is a moveRegReg comand
+			p = commands.indexOf("addRegMem");
+		}
+		else if ((!isNumber(p1))&&(p2.startsWith("%"))){
+			p = commands.indexOf("addMemReg");
+		}
+		return p;
+	}
+	
+	
+	private int proccessSub(String[] tokens) {
+		String p1 = tokens[1];
+		String p2 = "";
+		if(tokens.length > 2) {
+			p2 = tokens[2];
+		}
+		int p=-1;
+		
+		if(!isNumber(p1) && (p2.isEmpty()) &&(!p1.startsWith("%"))) {
+			p = commands.indexOf("addDefault");
+
+		}
+		else if ((p1.startsWith("%"))&&(p2.startsWith("%"))) { //this is a moveRegReg comand
+			p = commands.indexOf("subRegReg");
+		}
+		else if ((p1.startsWith("%"))&&(!isNumber(p2))) { //this is a moveRegReg comand
+			p = commands.indexOf("subRegMem");
+		}
+		else if ((isNumber(p1))&&(p2.startsWith("%"))){
+			p = commands.indexOf("subImmReg");
+		}
+		return p;
+	}
+	
+	
+	private int proccessInc(String[] tokens) {
+		int p=-1;
+		if(tokens.length > 1) {
+			p = commands.indexOf("incReg");
+		}
+		else if (tokens.length == 1)
+			p = commands.indexOf("incDefault");
+		return p;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public boolean isNumber(String s){
+	 try {
+	       Integer.parseInt(s);
+	       return true;
+	    }
+	    catch(NumberFormatException e){
+	        return false;
+	    }
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * This method creates the executable program from the object program
 	 * Step 1: check if all variables and labels mentioned in the object 
@@ -379,7 +570,8 @@ public class Assembler {
 	}
 
 	public static void main(String[] args) throws IOException {
-		String filename = args[0];
+		String filename = "fibonacci";//args[0];
+		//String filename = "MeuParaTestes";//args[0];
 		Assembler assembler = new Assembler();
 		System.out.println("Reading source assembler file: "+filename+".dsf");
 		assembler.read(filename);
