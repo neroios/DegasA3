@@ -285,6 +285,8 @@ public class Assembler {
 			
 			else if("sub".equals(tokens[0]))
 				p = proccessSub(tokens);
+			else if("inc".equals(tokens[0]))
+				p = proccessInc(tokens);
 		}	
 		return p;
 	}
@@ -370,7 +372,15 @@ public class Assembler {
 	}
 	
 	
-	
+	private int proccessInc(String[] tokens) {
+		int p=-1;
+		if(tokens.length > 1) {
+			p = commands.indexOf("incReg");
+		}
+		else if (tokens.length == 1)
+			p = commands.indexOf("incDefault");
+		return p;
+	}
 	
 	
 	
@@ -560,7 +570,8 @@ public class Assembler {
 	}
 
 	public static void main(String[] args) throws IOException {
-		String filename = "MeuParaTestes";//args[0];
+		String filename = "fibonacci";//args[0];
+		//String filename = "MeuParaTestes";//args[0];
 		Assembler assembler = new Assembler();
 		System.out.println("Reading source assembler file: "+filename+".dsf");
 		assembler.read(filename);

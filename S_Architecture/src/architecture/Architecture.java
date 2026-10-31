@@ -178,7 +178,7 @@ public class Architecture {
 		commandsList.add("read");  //5
 		commandsList.add("store"); //6
 		commandsList.add("ldi");   //7
-		commandsList.add("inc");   //8		
+		commandsList.add("incDefault");   //8		
 		commandsList.add("moveRegReg"); //9
 		commandsList.add("addRegReg"); // 10
 		commandsList.add("addMemReg"); // 11
@@ -1579,7 +1579,8 @@ public class Architecture {
 	
 	public static void main(String[] args) throws IOException {
 		Architecture arch = new Architecture(true);
-		arch.readExec("MeuParaTestes");
+		//arch.readExec("MeuParaTestes");
+		arch.readExec("fibonacci");
 		arch.controlUnitEexec();
 	}
 	

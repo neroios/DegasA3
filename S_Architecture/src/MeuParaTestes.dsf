@@ -1,13 +1,12 @@
 a
 b
-final
-ldi -100
+c
+ldi 90
 store a
-ldi 200
+move a %RPG1
+ldi 20
 store b
-move a %RPG2
-laco:
-add b %RPG2
-jn laco
-move %RPG2 final
-read final
+move b %RPG0
+add %RPG1 %RPG0
+move %RPG0 c
+read c

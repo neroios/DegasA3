@@ -1,0 +1,23 @@
+a
+b
+c
+valor
+ldi 1
+store a
+ldi 0
+store b
+ldi 40
+store valor
+laco:
+move 0 %RPG1
+add a %RPG1
+add b %RPG1
+move %RPG1 c
+read a
+store b
+read c
+store a
+move valor %RPG0
+jlw %RPG1 %RPG0 laco
+
+
